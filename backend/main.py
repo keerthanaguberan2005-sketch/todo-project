@@ -12,7 +12,9 @@ db = SessionLocal()
 # React Frontend connect panna CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000",
+                   "http://127.0.0.1:3000",
+                  ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -99,6 +101,7 @@ def edit_task(task_id: int, task: TaskCreate):
         raise HTTPException(status_code=404, detail="Task not found")
 
     todo.title = task.title
+    todo.completed = False
     db.commit()
     db.refresh(todo)
 

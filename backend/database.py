@@ -1,13 +1,25 @@
+import os
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-DATABASE_URL = "sqlite:///./todo.db"
+load_dotenv()
 
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False}
+# DATABASE_URL = os.getenv(
+#     "DATABASE_URL",
+#     "postgresql://postgres:scott@localhost:5432/todo_db"
+# )
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable is missing")
+
+engine = create_engine(DATABASE_URL)
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
 )
-
-SessionLocal = sessionmaker(bind=engine)
 
 Base = declarative_base()
